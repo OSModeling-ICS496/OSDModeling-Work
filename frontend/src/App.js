@@ -1,25 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import MapComponent from './MapComponent';
+import SlidePanel from './SlidePanel';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [isPanelOpen, setIsPanelOpen] = useState(false);
+    const routeData = [[19.5987, -155.4659], [19.8987, -155.8659], [20.9987, -156.9659]];
+    const togglePanel = () => setIsPanelOpen(!isPanelOpen);
+
+    return (
+        <div className="App">
+            <SlidePanel />
+            <MapComponent routeData={routeData} />
+        </div>
+    );
 }
 
 export default App;
