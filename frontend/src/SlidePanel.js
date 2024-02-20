@@ -31,27 +31,14 @@ const SlidePanel = () => {
     };
 
     const handleSubmit = async () => {
-        try {
-            const response = await fetch('http://localhost:5000/run-python', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ selectedValue }),
-            });
 
-            const data = await response.json();
-            console.log(data); // Process your response data here
-        } catch (error) {
-            console.error('Error:', error);
-        }
     };
 
     return (
         <div>
             {!isPaneOpen && (
                 <button className='sidebar-toggle' onClick={() => setIsPaneOpen(true)}>
-                    <span> >> </span>
+                    <span>>></span>
                 </button>
             )}
             <SlidingPane
