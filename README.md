@@ -1,5 +1,5 @@
 # OSDModeling-Work
-backend: 
+backend: in backend folder, run 'python test.py'
 
 
-frondend: in frontend folder, run `npm start`
+frontend: in frontend folder, run `npm start`
