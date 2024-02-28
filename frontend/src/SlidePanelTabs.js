@@ -6,9 +6,8 @@ import InputSystem from "./InputSystem";
 import ResultsAnalysis from "./ResultsAnalysis";
 
 const SlidePanelTabs = () => {
-    const [activeTab, setActiveTab] = useState(''); // Default active tab
+    const [activeTab, setActiveTab] = useState('');
 
-    // Function to render content based on the active tab
     const renderTabContent = () => {
         switch (activeTab) {
             case 'Coordinate':

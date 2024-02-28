@@ -26,7 +26,6 @@ const SlidePanel = () => {
         fetchOptions();
     }, []);
 
-
     const handleSelectionChange = (event) => {
         const selectedName = event.target.value;
         const uavDetails = options.find(option => option.name === selectedName);
@@ -34,11 +33,33 @@ const SlidePanel = () => {
     };
 
     const handleSubmit = async () => {
+        const content = `${selectedUAV.name}, ${selectedUAV.range}, ${selectedUAV.endurance}`;
+        const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'selectedUAV.csv'; // or 'selectedUAV.txt' for a text file
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
+        /** run python script:
+        const response = await fetch('http://localhost:5000/run-script', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(content),
+        });
+
+        const responseData = await response.json();
+        console.log(responseData.output);
+         **/
     };
+
 
     return (
         <div>
+            <h3>Enter Systems:</h3>
             <div>
                 <span><b>Unmanned systems:</b> <br/></span>
                 <select defaultValue="" onChange={handleSelectionChange}>
@@ -56,15 +77,14 @@ const SlidePanel = () => {
                     )}
                 </div>
 
-                <button onClick={handleSubmit}>Run Result</button>
+                <button onClick={handleSubmit}>Download Info and Run Script</button>
             </div>
 
             <div>
-                some lon & lat info
+                some basic info generate from python script
             </div>
         </div>
     );
-
 };
 
 export default SlidePanel;

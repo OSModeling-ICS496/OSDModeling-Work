@@ -1,44 +1,77 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import * as d3 from 'd3';
+import Papa from 'papaparse';
 
-// const Coordinate = ({ onCoordinatesSubmit }) => {
-const Coordinate = ({  }) => {
-    const [startCoord, setStartCoord] = useState({ lat: '', lng: '' });
-    const [endCoord, setEndCoord] = useState({ lat: '', lng: '' });
+const Coordinate = () => {
+    const [coordinates, setCoordinates] = useState([]);
+    const [newCoord, setNewCoord] = useState({ lat: '', lng: '', order: 1 });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("test", {startCoord, endCoord});
-        //onCoordinatesSubmit({ startCoord, endCoord })
+    const handleAddCoordinate = () => {
+        setCoordinates([...coordinates, { ...newCoord, order: coordinates.length + 1 }]);
+        setNewCoord({ lat: '', lng: '', order: coordinates.length + 2 });
+    };
+
+    const handleRemoveCoordinate = (indexToRemove) => {
+        const updatedCoordinates = coordinates.filter((_, index) => index !== indexToRemove)
+            .map((coord, index) => ({ ...coord, order: index + 1 }));
+        setCoordinates(updatedCoordinates);
+    };
+
+    const handleSort = (index, newOrder) => {
+        let tempCoords = [...coordinates];
+        tempCoords[index].order = parseInt(newOrder, 10);
+        tempCoords = d3.sort(tempCoords, d => d.order);
+        setCoordinates(tempCoords);
+    };
+
+    const exportToCSV = () => {
+        const csv = Papa.unparse(coordinates);
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'Coordinate.csv';
+        link.click();
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h3>Enter Coordinates</h3>
-            <div>
-                <label id={'startPoint'}>Start Point:</label>
-                <br/>
-                <input type={'text'} id={'startPointN'} value={startCoord.lat}
-                       onChange={(e) => setStartCoord({...startCoord, lat: e.target.value})}/>
-                <span>N°</span>
-                <input type={'text'} id={'startPointW'} value={startCoord.lng}
-                       onChange={(e) => setStartCoord({...startCoord, lng: e.target.value})}/>
-                <span>W°</span>
-            </div>
-
-            <div>
-                <label id={'endPoint'}>End Point:</label>
-                <br/>
-                <input type={'text'} id={'endPointN'} value={endCoord.lat}
-                       onChange={(e) => setEndCoord({...endCoord, lat: e.target.value})}/>
-                <span>N°</span>
-                <input type={'text'} id={'endPointW'} value={endCoord.lng}
-                       onChange={(e) => setEndCoord({...endCoord, lng: e.target.value})}/>
-                <span>W°</span>
-            </div>
-
-            <button type={'submit'}>Submit</button>
-        </form>
-
+        <div>
+            <h3>Enter Coordinate:</h3>
+            <input
+                type="text"
+                value={newCoord.lat}
+                onChange={(e) => setNewCoord({...newCoord, lat: e.target.value})}
+                placeholder="Latitude"
+            />
+            <span>N°</span>
+            <input
+                type="text"
+                value={newCoord.lng}
+                onChange={(e) => setNewCoord({...newCoord, lng: e.target.value})}
+                placeholder="Longitude"
+            />
+            <span>W°</span>
+            <br/>
+            <button onClick={handleAddCoordinate}>Add Point</button>
+            <br/>
+            {coordinates.map((coord, index) => (
+                <div key={index}>
+                    {index + 1}. lat: {coord.lat} N lng: {coord.lng} W
+                    <select
+                        value={coord.order}
+                        onChange={(e) => handleSort(index, e.target.value)}>
+                        {Array.from({length: coordinates.length}, (_, i) => i + 1).map((order) => (
+                            <option key={order} value={order}>
+                                {order}
+                            </option>
+                        ))}
+                    </select>
+                    <button onClick={() => handleRemoveCoordinate(index)}>Remove</button>
+                </div>
+            ))}
+            <button onClick={exportToCSV}>Save as CSV</button>
+            <br/>
+            <span>please save file in public/data</span>
+        </div>
     );
 };
 
