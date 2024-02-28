@@ -3,9 +3,9 @@ import Papa from 'papaparse';
 import './SlidePanel.css';
 import "react-sliding-pane/dist/react-sliding-pane.css";
 
-const SlidePanel = () => {
+const InputSystem = () => {
     const [options, setOptions] = useState([]);
-    const [selectedUAV, setSelectedUAV] = useState({});
+    const [selectedUAVs, setSelectedUAVs] = useState([]); // Now using an array to store multiple selections
 
     useEffect(() => {
         const fetchOptions = () => {
@@ -29,33 +29,38 @@ const SlidePanel = () => {
     const handleSelectionChange = (event) => {
         const selectedName = event.target.value;
         const uavDetails = options.find(option => option.name === selectedName);
-        setSelectedUAV(uavDetails);
+        setSelectedUAVs([...selectedUAVs, uavDetails]); // Add the selected UAV to the array
     };
 
     const handleSubmit = async () => {
-        const content = `${selectedUAV.name}, ${selectedUAV.range}, ${selectedUAV.endurance}`;
+        // Prepare content for all selected UAVs
+        const content = selectedUAVs.map(uav => `${uav.name}, ${uav.range}, ${uav.endurance}`).join('\n');
         const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'selectedUAV.csv'; // or 'selectedUAV.txt' for a text file
+        link.download = 'selectedUAVs.csv'; // Naming for multiple UAVs
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
         /** run python script:
-        const response = await fetch('http://localhost:5000/run-script', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(content),
-        });
+         const response = await fetch('http://localhost:5000/run-script', {
+         method: 'POST',
+         headers: {
+         'Content-Type': 'application/json',
+         },
+         body: JSON.stringify(content),
+         });
 
-        const responseData = await response.json();
-        console.log(responseData.output);
+         const responseData = await response.json();
+         console.log(responseData.output);
          **/
     };
 
+    // Function to remove a UAV from the selection
+    const removeUAV = (indexToRemove) => {
+        setSelectedUAVs(selectedUAVs.filter((_, index) => index !== indexToRemove));
+    };
 
     return (
         <div>
@@ -72,9 +77,14 @@ const SlidePanel = () => {
                 <div>
                     <br/>
                     <span><b>System Info:</b> <br/></span>
-                    {selectedUAV && (
-                        <span>Range - {selectedUAV.range}, Endurance - {selectedUAV.endurance}</span>
-                    )}
+                    <ul>
+                        {selectedUAVs.map((uav, index) => (
+                            <li key={index}>
+                                {`Name: ${uav.name}, Range: ${uav.range}, Endurance: ${uav.endurance} `}
+                                <button onClick={() => removeUAV(index)}>Remove</button>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
 
                 <button onClick={handleSubmit}>Download Info and Run Script</button>
@@ -87,4 +97,4 @@ const SlidePanel = () => {
     );
 };
 
-export default SlidePanel;
+export default InputSystem;
