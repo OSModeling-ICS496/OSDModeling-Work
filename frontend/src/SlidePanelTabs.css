@@ -1,0 +1,25 @@
+.tab {
+    background-color: #04AA6D;
+    border: None;
+    color: white;
+    padding: 17px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.tabs {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+.grid-item {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    font-size: 30px;
+    text-align: center;
+}

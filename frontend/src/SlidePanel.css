@@ -1,8 +1,9 @@
 .sidebar-toggle {
     z-index: 1010;
-    width: 45px;
-    height: 100vh;
+    width: 25px;
+    height: 50px;
     position: fixed;
+    top: 50%;
     left: 0;
     border: none;
     border-radius: 0 5px 5px 0;
@@ -13,22 +14,4 @@
 
 .sidebar-toggle:hover {
     opacity: 50%;
-}
-
-.side-navbar {
-    display: flex;
-    flex-direction: column; /* Stack links vertically */
-    padding: 20px 0; /* Add some padding on top and bottom */
-}
-
-.side-navbar a {
-    padding: 10px 20px; /* Add some padding to each link for better touch */
-    text-decoration: none; /* Remove the underline from links */
-    color: #333; /* Set the text color */
-    border-bottom: 1px solid #eee; /* Add a subtle separator */
-    margin: 5px 0; /* Add some margin between links */
-}
-
-.side-navbar a:hover {
-    background-color: #f0f0f0; /* Add a hover effect */
 }
