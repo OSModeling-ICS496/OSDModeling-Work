@@ -2,4 +2,6 @@
 backend: in backend folder, run 'python test.py'
 
 
-frontend: in frontend folder, run `npm start`
+frontend: in frontend folder, run `npm install`
+
+then `npm start`
