@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import Papa from 'papaparse';
 import L from 'leaflet';
 
+// Adjust Leaflet's default icon paths
 delete L.Icon.Default.prototype._getIconUrl;
-
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
     iconUrl: require('leaflet/dist/images/marker-icon.png'),
     shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
+
+function ChangeMapView({ center }) {
+    const map = useMap();
+    map.setView(center, map.getZoom());
+    return null;
+}
 
 const MapComponent = ({ routeData }) => {
     const [markerData, setMarkerData] = useState([]);
@@ -40,6 +46,8 @@ const MapComponent = ({ routeData }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
+            {/* Dynamically update the map center */}
+            <ChangeMapView center={mapCenter} />
             {markerData.map((position, idx) => (
                 <Marker key={idx} position={[position.lat, position.lng]}>
                     <Popup>
