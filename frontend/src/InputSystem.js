@@ -32,30 +32,65 @@ const InputSystem = () => {
         setSelectedUAVs([...selectedUAVs, uavDetails]); // Add the selected UAV to the array
     };
 
+    // const handleSubmit = async () => {
+    //     // Prepare content for all selected UAVs
+    //     const content = selectedUAVs.map(uav => `${uav.name}, ${uav.range}, ${uav.endurance}`).join('\n');
+    //     const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    //     const link = document.createElement('a');
+    //     link.href = URL.createObjectURL(blob);
+    //     link.download = 'selectedUAVs.csv'; // Naming for multiple UAVs
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+
+    //     /** run python script:
+    //      const response = await fetch('http://localhost:5000/run-script', {
+    //      method: 'POST',
+    //      headers: {
+    //      'Content-Type': 'application/json',
+    //      },
+    //      body: JSON.stringify(content),
+    //      });
+
+    //      const responseData = await response.json();
+    //      console.log(responseData.output);
+    //      **/
+    // };
+
     const handleSubmit = async () => {
         // Prepare content for all selected UAVs
-        const content = selectedUAVs.map(uav => `${uav.name}, ${uav.range}, ${uav.endurance}`).join('\n');
-        const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'selectedUAVs.csv'; // Naming for multiple UAVs
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const content = selectedUAVs.map(uav => ({
+            name: uav.name,
+            range: uav.range,
+            endurance: uav.endurance
+        }));
+    
+        try {
+            const response = await fetch('https://96k2qcbm5k.execute-api.us-east-1.amazonaws.com/default/Test1', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
 
-        /** run python script:
-         const response = await fetch('http://localhost:5000/run-script', {
-         method: 'POST',
-         headers: {
-         'Content-Type': 'application/json',
-         },
-         body: JSON.stringify(content),
-         });
+                },
+                body: JSON.stringify({ selectedUAVs: content }),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const responseData = await response.json();
+            console.log(responseData);
 
-         const responseData = await response.json();
-         console.log(responseData.output);
-         **/
+            setApiResponse(JSON.stringify(responseData, null, 2)); 
+        } catch (error) {
+            console.error('Error calling API:', error);
+            setApiResponse("Error calling API: " + error.message);
+        }
     };
+    
+    const [apiResponse, setApiResponse] = useState("");
+
 
     // Function to remove a UAV from the selection
     const removeUAV = (indexToRemove) => {
@@ -87,11 +122,12 @@ const InputSystem = () => {
                     </ul>
                 </div>
 
-                <button onClick={handleSubmit}>Download Info and Run Script</button>
+                <button onClick={handleSubmit}>Submit and Display API Response</button>
             </div>
 
             <div>
-                some basic info generate from python script
+                <h3>API Response:</h3>
+                <pre>{apiResponse}</pre> {/* Displaying the API response */}
             </div>
         </div>
     );
