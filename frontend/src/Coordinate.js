@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
-import * as d3 from 'd3';
-import Papa from 'papaparse';
+import React, { useState, useEffect } from 'react';
+import { OutlinedInput, Box, Button, IconButton, Select, Container, MenuItem, InputLabel, InputAdornment } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import Map from "./Map";
 
-const Coordinate = () => {
+const Coordinate = ({ onCoordinateChange }) => {
     const [coordinates, setCoordinates] = useState([]);
     const [newCoord, setNewCoord] = useState({ lat: '', lng: '', order: 1 });
+    const [showMap, setShowMap] = useState(false);
+
+    useEffect(() => {
+        onCoordinateChange(coordinates);
+    }, [coordinates]);
 
     const handleAddCoordinate = () => {
         setCoordinates([...coordinates, { ...newCoord, order: coordinates.length + 1 }]);
@@ -20,58 +26,77 @@ const Coordinate = () => {
     const handleSort = (index, newOrder) => {
         let tempCoords = [...coordinates];
         tempCoords[index].order = parseInt(newOrder, 10);
-        tempCoords = d3.sort(tempCoords, d => d.order);
+        tempCoords.sort((a, b) => a.order - b.order);
         setCoordinates(tempCoords);
     };
 
-    const exportToCSV = () => {
-        const csv = Papa.unparse(coordinates);
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'Coordinate.csv';
-        link.click();
+    const toggleMap = () => {
+        setShowMap(!showMap);
     };
 
     return (
-        <div>
-            <h3>Enter Coordinate:</h3>
-            <input
-                type="text"
-                value={newCoord.lat}
-                onChange={(e) => setNewCoord({...newCoord, lat: e.target.value})}
-                placeholder="Latitude"
-            />
-            <span>N°</span>
-            <input
-                type="text"
-                value={newCoord.lng}
-                onChange={(e) => setNewCoord({...newCoord, lng: e.target.value})}
-                placeholder="Longitude"
-            />
-            <span>W°</span>
-            <br/>
-            <button onClick={handleAddCoordinate}>Add Point</button>
-            <br/>
-            {coordinates.map((coord, index) => (
-                <div key={index}>
-                    {index + 1}. lat: {coord.lat} N lng: {coord.lng} W
-                    <select
-                        value={coord.order}
-                        onChange={(e) => handleSort(index, e.target.value)}>
-                        {Array.from({length: coordinates.length}, (_, i) => i + 1).map((order) => (
-                            <option key={order} value={order}>
-                                {order}
-                            </option>
-                        ))}
-                    </select>
-                    <button onClick={() => handleRemoveCoordinate(index)}>Remove</button>
-                </div>
-            ))}
-            <button onClick={exportToCSV}>Save as CSV</button>
-            <br/>
-            <span>please save file in public/data</span>
-        </div>
+        <Container>
+            <Box
+                component="div"
+                sx={{
+                    '& > :not(style)': { m: 1 },
+                }}
+                noValidate
+                autoComplete="off"
+            >
+                <InputLabel><b>Enter Coordinates:</b></InputLabel>
+                <OutlinedInput
+                    id="Latitude"
+                    placeholder="Latitude"
+                    required
+                    variant="standard"
+                    value={newCoord.lat}
+                    onChange={(e) => setNewCoord({...newCoord, lat: e.target.value})}
+                    endAdornment={<InputAdornment position="end">N°</InputAdornment>}
+                />
+                <OutlinedInput
+                    id="Longitude"
+                    placeholder="Longitude"
+                    required
+                    variant="standard"
+                    value={newCoord.lng}
+                    onChange={(e) => setNewCoord({...newCoord, lng: e.target.value})}
+                    endAdornment={<InputAdornment position="end">W°</InputAdornment>}
+                />
+
+                <Button variant="contained" onClick={handleAddCoordinate}>Add Point</Button>
+                <Button variant="contained" onClick={toggleMap}>{showMap ? 'Hide Map' : 'Show Map'}</Button>
+                <InputLabel>Coordinate Orders:</InputLabel>
+                {coordinates.map((coord, index) => (
+                    <Box
+                        component="div"
+                        sx={{
+                            '& > :not(style)': { m: 1 },
+                        }}
+                        noValidate
+                        autoComplete="off"
+                        key={index}
+                    >
+                        {index + 1}. lat: {coord.lat} N, lng: {coord.lng} W
+                        <Select
+                            size="small"
+                            displayEmpty
+                            value={coord.order}
+                            onChange={(e) => handleSort(index, e.target.value)}>
+                            {Array.from({length: coordinates.length}, (_, i) => i + 1).map((order) => (
+                                <MenuItem key={order} value={order}>
+                                    {order}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <IconButton aria-label="delete" onClick={() => handleRemoveCoordinate(index)}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Box>
+                ))}
+            </Box>
+            {showMap && (<Map coordData={coordinates} />)}
+        </Container>
     );
 };
 
