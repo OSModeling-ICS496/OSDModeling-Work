@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import {Box, Card, CardContent, Container, Grid, Paper, Typography} from "@mui/material";
 
-const ShowInputs = ({ GetuavData, GetcoverageData, GettimeData, GetcoordData }) => {
+const ShowInputs = ({ GetuavData, GettotalCoverage, GetminCoverage, GettimeData, GetcoordData }) => {
     const [coordData, setCoordData] = useState({});
+    const [totalCoverage, setTotalCoverage] = useState({});
     const [timeData, setTimeData] = useState({});
-    const [coverageData, setCoverageData] = useState({});
+    const [minCoverage, setMinCoverage] = useState({});
     const [uavData, setUavData] = useState({});
 
     useEffect(() => {
         setCoordData(GetcoordData());
         setTimeData(GettimeData());
-        setCoverageData(GetcoverageData());
+        setMinCoverage(GetminCoverage());
+        setTotalCoverage(GettotalCoverage());
         setUavData(GetuavData());
-    }, [GetuavData, GetcoverageData, GettimeData, GetcoordData]);
+    }, [GetuavData, GettotalCoverage, GetminCoverage, GettimeData, GetcoordData]);
 
     return (
         <Box sx={{'& > :not(style)': { m: 2 },}} style={{ textAlign: 'center' }}>
@@ -29,36 +31,44 @@ const ShowInputs = ({ GetuavData, GetcoverageData, GettimeData, GetcoordData }) 
 
                             <Grid item xs={4} style={{ display: 'flex', justifyContent: 'center' }}>
                                 <Paper style={{ width: 'fit-content', padding: '20px' }} elevation={5}>
-                                    <Typography color="#f44336" variant="h4">{coverageData ? coverageData.toString() : '0'}</Typography>
-                                    <Typography variant="h6">SQUARE MILES COVERAGE</Typography>
+                                    <Typography color="#f44336" variant="h4">{minCoverage ? minCoverage.toString() : '0'} %</Typography>
+                                    <Typography variant="h6">MINIMUM COVERAGE</Typography>
                                 </Paper>
+                            </Grid>
+
+                            <Grid item xs={4} style={{ display: 'flex', justifyContent: 'center' }}>
+                              <Paper style={{ width: 'fit-content', padding: '20px' }} elevation={5}>
+                                <Typography color="#f44336" variant="h4">{totalCoverage ? totalCoverage.toString() : '0'} km²</Typography>
+                                <Typography variant="h6">Total COVERAGE</Typography>
+                              </Paper>
                             </Grid>
                         </Grid>
                     </Container>
                 </CardContent>
             </Card>
 
+
             <Card>
-                <CardContent>
-                    <Container style={{ textAlign: 'center' }}>
-                        <Typography variant="h6" m={4}>COORDINATE</Typography>
-                        <Grid container spacing={1} justifyContent="center">
-                            {coordData && coordData.length > 0 ? (
-                                coordData.map((coord, index) => (
-                                    <Grid item key={index} xs={3} style={{ display: 'flex', justifyContent: 'center' }}>
-                                        <Paper style={{ width: 'fit-content', padding: '20px' }} elevation={5}>
-                                            <Typography color="#357a38" variant="h4">
-                                                {coord.lat}N° {coord.lng}W°
-                                            </Typography>
-                                        </Paper>
-                                    </Grid>
-                                ))
-                            ) : (
-                                <Paper style={{ width: 'fit-content', padding: '20px' }} elevation={5}>Not available</Paper>
-                            )}
-                        </Grid>
-                    </Container>
-                </CardContent>
+              <CardContent>
+                <Container style={{ textAlign: 'center' }}>
+                  <Typography variant="h6" m={4}>COORDINATE</Typography>
+                  <Grid container spacing={1} justifyContent="center">
+                    {coordData && coordData.length > 0 ? (
+                        coordData.map((coord, index) => (
+                            <Grid item key={index} xs={3} style={{ display: 'flex', justifyContent: 'center' }}>
+                              <Paper style={{ width: 'fit-content', padding: '20px' }} elevation={5}>
+                                <Typography color="#357a38" variant="h4">
+                                  {coord.lat}N° {coord.lng}W°
+                                </Typography>
+                              </Paper>
+                            </Grid>
+                        ))
+                    ) : (
+                        <Paper style={{ width: 'fit-content', padding: '20px' }} elevation={5}>Not available</Paper>
+                    )}
+                  </Grid>
+                </Container>
+              </CardContent>
             </Card>
 
             <Card>

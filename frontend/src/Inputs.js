@@ -2,19 +2,25 @@ import React, { useState } from 'react';
 import { Card, CardContent, Box, Button, InputLabel, AccordionSummary, Typography, AccordionDetails, Accordion, Container } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Coordinate from "./Coordinate";
-import TimeAndCoverage from "./TimeAndCoverage";
+import MinCoverage from "./MinCoverage";
 import UnmannedSystems from "./UnmannedSystems";
 import ShowInputs from "./ShowInputs";
 
 const Inputs = () => {
     const [coordData, setCoordData] = useState({});
-    const [timeData, setTimeData] = useState({});
-    const [coverageData, setCoverageData] = useState({});
+    const [totalCoverage, setTotalCoverage] = useState(0);
+    const [timeData, setTimeData] = useState(0);
+    const [minCoverage, setMinCoverage] = useState({});
     const [uavData, setUavData] = useState({});
     const [apiResponse, setApiResponse] = useState("");
 
     const handleCoordinateChange = (data) => {
+        const totalSize = data.reduce((acc, curr) => acc + parseFloat(curr.size || 0), 0);
+        const totalTime = data.reduce((acc, curr) => acc + parseFloat(curr.time || 0), 0);
+
         setCoordData(data);
+        setTotalCoverage(totalSize);
+        setTimeData(totalTime);
     };
 
     const handleTimeChange = (data) => {
@@ -22,7 +28,7 @@ const Inputs = () => {
     };
 
     const handleCoverageChange = (data) => {
-        setCoverageData(data);
+      setMinCoverage(data);
     };
 
     const handleUnmannedSystemsChange = (data) => {
@@ -33,7 +39,8 @@ const Inputs = () => {
         const integratedData = {
             coordData,
             timeData,
-            coverageData,
+            minCoverage,
+            totalCoverage,
             uavData
         };
         return integratedData;
@@ -94,8 +101,8 @@ const Inputs = () => {
                             <CardContent>
                                 {/* Coordinate */}
                                 <Coordinate onCoordinateChange={handleCoordinateChange} />
-                                {/* TimeAndCoverage */}
-                                <TimeAndCoverage onCoverageChange={handleCoverageChange} onTimeChange={handleTimeChange} />
+                                {/* MinCoverage */}
+                                <MinCoverage onCoverageChange={handleCoverageChange}  />
                                 {/* Unmanned Systems */}
                                 <UnmannedSystems onUnmannedSystemsChange={handleUnmannedSystemsChange} />
                             </CardContent>
@@ -130,11 +137,11 @@ const Inputs = () => {
 
             <ShowInputs
                 GetuavData={() => uavData}
-                GetcoverageData={() => coverageData}
+                GetminCoverage={() => minCoverage}
+                GettotalCoverage={() => totalCoverage}
                 GettimeData={() => timeData}
                 GetcoordData={() => coordData}
             />
-
 
         </Container>
     );
