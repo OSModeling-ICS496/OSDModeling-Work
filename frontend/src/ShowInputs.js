@@ -70,13 +70,11 @@ const ShowInputs = ({ GetuavData, GetcoverageData, GettimeData, GetcoordData }) 
                                 uavData.map((uav, index) => (
                                     <Grid item key={index} xs={3} style={{ display: 'flex', justifyContent: 'center' }}>
                                         <Paper style={{ width: 'fit-content', padding: '20px' }} elevation={5}>
-                                            <Typography variant="h4">
-                                                <Typography color="#3f50b5" variant="h4">{uav.name}</Typography>
-                                                <Typography variant="h6">Range:</Typography>
-                                                <Typography color="#757ce8" variant="h4">{uav.range}</Typography>
-                                                <Typography variant="h6">Endurance:</Typography>
-                                                <Typography color="#757ce8" variant="h4">{uav.endurance}</Typography>
-                                            </Typography>
+                                            <Typography color="#3f50b5" variant="h4">{uav.name}</Typography>
+                                            <Typography variant="h6">Range:</Typography>
+                                            <Typography color="#757ce8" variant="h4">{uav.range}</Typography>
+                                            <Typography variant="h6">Endurance:</Typography>
+                                            <Typography color="#757ce8" variant="h4">{uav.endurance}</Typography>
                                         </Paper>
                                     </Grid>
                                 ))
