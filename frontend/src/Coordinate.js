@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { OutlinedInput, Box, Button, IconButton, Select, Container, MenuItem, InputLabel, InputAdornment, Grid } from "@mui/material";
+import { OutlinedInput, Box, Button, IconButton, Select, Container, MenuItem, InputLabel, InputAdornment, Grid, FormControl  } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Map from "./Map";
 
@@ -52,52 +52,63 @@ const Coordinate = ({ onCoordinateChange }) => {
         >
           <InputLabel><b>Enter Coordinates and Size:</b></InputLabel>
           <Grid container>
-            <Grid xs={3} md={3} lg={3}>
-              <OutlinedInput
-                  id="Latitude"
-                  placeholder="Latitude"
-                  required
-                  variant="standard"
-                  value={newCoord.lat}
-                  onChange={(e) => setNewCoord({...newCoord, lat: e.target.value})}
-                  endAdornment={<InputAdornment position="end">N°</InputAdornment>}
-              />
+            <Grid>
+              <FormControl sx={{ m: 1, width: '25ch' }}>
+                <OutlinedInput
+                    sx={{
+                      maxWidth: 210,
+                    }}
+                    id="Latitude"
+                    placeholder="Latitude"
+                    required
+                    variant="standard"
+                    value={newCoord.lat}
+                    onChange={(e) => setNewCoord({...newCoord, lat: e.target.value})}
+                    endAdornment={<InputAdornment position="end">N°</InputAdornment>}
+                />
+              </FormControl>
             </Grid>
 
-            <Grid xs={3} md={3} lg={3}>
-              <OutlinedInput
-                  id="Longitude"
-                  placeholder="Longitude"
-                  required
-                  variant="standard"
-                  value={newCoord.lng}
-                  onChange={(e) => setNewCoord({...newCoord, lng: e.target.value})}
-                  endAdornment={<InputAdornment position="end">W°</InputAdornment>}
-              />
+            <Grid>
+              <FormControl sx={{ m: 1, width: '25ch' }}>
+                <OutlinedInput
+                    id="Longitude"
+                    placeholder="Longitude"
+                    required
+                    variant="standard"
+                    value={newCoord.lng}
+                    onChange={(e) => setNewCoord({...newCoord, lng: e.target.value})}
+                    endAdornment={<InputAdornment position="end">W°</InputAdornment>}
+                />
+              </FormControl>
             </Grid>
 
-            <Grid xs={3} md={3} lg={3}>
-              <OutlinedInput
-                  id="Size"
-                  placeholder="Size"
-                  required
-                  variant="outlined"
-                  value={newCoord.size}
-                  onChange={(e) => setNewCoord({...newCoord, size: e.target.value})}
-                  endAdornment={<InputAdornment position="end">km²</InputAdornment>}
-              />
+            <Grid>
+              <FormControl sx={{ m: 1, width: '25ch' }}>
+                <OutlinedInput
+                    id="Size"
+                    placeholder="Size"
+                    required
+                    variant="outlined"
+                    value={newCoord.size}
+                    onChange={(e) => setNewCoord({...newCoord, size: e.target.value})}
+                    endAdornment={<InputAdornment position="end">km²</InputAdornment>}
+                />
+              </FormControl>
             </Grid>
 
-            <Grid xs={3} md={3} lg={3}>
-              <OutlinedInput
-                  id="Time"
-                  placeholder="Time"
-                  required
-                  variant="outlined"
-                  value={newCoord.time}
-                  onChange={(e) => setNewCoord({...newCoord, time: e.target.value})}
-                  endAdornment={<InputAdornment position="end">minutes</InputAdornment>}
-              />
+            <Grid>
+              <FormControl sx={{ m: 1, width: '25ch' }}>
+                <OutlinedInput
+                    id="Time"
+                    placeholder="Time"
+                    required
+                    variant="outlined"
+                    value={newCoord.time}
+                    onChange={(e) => setNewCoord({...newCoord, time: e.target.value})}
+                    endAdornment={<InputAdornment position="end">minutes</InputAdornment>}
+                />
+              </FormControl>
             </Grid>
           </Grid>
 
@@ -114,7 +125,7 @@ const Coordinate = ({ onCoordinateChange }) => {
                   autoComplete="off"
                   key={index}
               >
-                {index + 1}. lat: {coord.lat} N, lng: {coord.lng} W, size: {coord.size} km²
+                {index + 1}. lat: {coord.lat} N, lng: {coord.lng} W, size: {coord.size} km², time: {coord.time} minutes
                 <Select
                     size="small"
                     displayEmpty

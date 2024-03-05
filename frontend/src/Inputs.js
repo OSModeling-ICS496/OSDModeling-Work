@@ -8,7 +8,7 @@ import ShowInputs from "./ShowInputs";
 
 const Inputs = () => {
     const [coordData, setCoordData] = useState({});
-    const [totalCoverage, setTotalCoverage] = useState(0);
+    const [totalArea, settotalArea] = useState(0);
     const [timeData, setTimeData] = useState(0);
     const [minCoverage, setMinCoverage] = useState({});
     const [uavData, setUavData] = useState({});
@@ -19,7 +19,7 @@ const Inputs = () => {
         const totalTime = data.reduce((acc, curr) => acc + parseFloat(curr.time || 0), 0);
 
         setCoordData(data);
-        setTotalCoverage(totalSize);
+        settotalArea(totalSize);
         setTimeData(totalTime);
     };
 
@@ -40,7 +40,7 @@ const Inputs = () => {
             coordData,
             timeData,
             minCoverage,
-            totalCoverage,
+            totalArea,
             uavData
         };
         return integratedData;
@@ -116,15 +116,13 @@ const Inputs = () => {
                                 <pre>{apiResponse}</pre>
                                 <pre>
                         {   "Example:\n" +
-                            "{coordData: Array(3), timeData: '30', coverageData: '5', uavData: Array(2)}\n" +
-                            "\n" +
-                            "\n" +
                             "coordData: Array(3)\n" +
-                            "\t0: {lat: '0', lng: '0', order: 1}\n" +
-                            "\t1: {lat: '1', lng: '1', order: 2}\n" +
-                            "\t2: {lat: '2', lng: '2', order: 3}\n" +
-                            "coverageData: \"5\"\n" +
-                            "timeData: \"30\"\n" +
+                            "\t0: {lat: '1', lng: '1', order: 1, size: '1', time: '2'}\n" +
+                            "\t1: {lat: '2', lng: '2', order: 2, size: '2', time: '3'}\n" +
+                            "\t2: {lat: '3', lng: '3', order: 3, size: '3', time: '4'}\n" +
+                            "minCoverage: \"80\"\n" +
+                            "timeData: \"9\"\n" +
+                            "totalArea: \"6\"\n" +
                             "uavData: Array(2)\n" +
                             "\t0: {name: 'Global Hawk', range: '22800.00', endurance: '38.00'}\n" +
                             "\t1: {name: 'Gray Eagle', range: '6000.00', endurance: '25.00'}"}
@@ -138,7 +136,7 @@ const Inputs = () => {
             <ShowInputs
                 GetuavData={() => uavData}
                 GetminCoverage={() => minCoverage}
-                GettotalCoverage={() => totalCoverage}
+                GettotalArea={() => totalArea}
                 GettimeData={() => timeData}
                 GetcoordData={() => coordData}
             />
