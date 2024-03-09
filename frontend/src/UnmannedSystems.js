@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import { Container, Box, MenuItem, FormControl, Select, Grid, FormHelperText, InputLabel, List, ListItem, ListItemText, IconButton, TextField, Button } from '@mui/material';
+import { Container, Box, MenuItem, FormControl, Select, Grid, FormHelperText, InputLabel, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
-    /* This for selecting UAVs*/
     const [options, setOptions] = useState([]);
     const [selectedUAVs, setSelectedUAVs] = useState([]);
     const [selectedValue, setSelectedValue] = useState("");
-    /* This is for manually adding UAVs */
-    const [name, setName] = useState("");
-    const [range, setRange] = useState("");
-    const [endurance, setEndurance] = useState("");
 
-
-  useEffect(() => {
+    useEffect(() => {
         const fetchOptions = () => {
             Papa.parse('/data/UAV_specs_-_Sheet1.csv', {
                 download: true,
@@ -42,13 +36,6 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
         const uavDetails = options.find(option => option.name === selectedName);
         setSelectedUAVs([...selectedUAVs, uavDetails]);
         setSelectedValue("");
-    };
-
-    const handleAddCustomUAV = () => {
-      setSelectedUAVs([...selectedUAVs, { name, range, endurance }]);
-      setName("");
-      setRange("");
-      setEndurance("");
     };
 
     /**
@@ -117,27 +104,6 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
                             <FormHelperText>Switch option to add more than one unmanned systems</FormHelperText>
                         </FormControl>
 
-                      <div>
-                        <TextField
-                          label="Name"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          fullWidth
-                        />
-                        <TextField
-                          label="Range (in km)"
-                          value={range}
-                          onChange={(e) => setRange(e.target.value)}
-                          fullWidth
-                        />
-                        <TextField
-                          label="Endurance (in hours)"
-                          value={endurance}
-                          onChange={(e) => setEndurance(e.target.value)}
-                          fullWidth
-                        />
-                        <Button variant="contained" onClick={handleAddCustomUAV}>Add Custom UAV</Button>
-                      </div>
 
                         <div>
                             <br/>
