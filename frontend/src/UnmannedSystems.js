@@ -37,9 +37,17 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
   const handleSelectionChange = (event) => {
     const selectedName = event.target.value;
     const uavDetails = options.find(option => option.name === selectedName);
-    setSelectedUAVs([...selectedUAVs, uavDetails]);
+
+    // Check if a UAV with the same name, range, and endurance already exists
+    const duplicateUAV = selectedUAVs.find(uav => uav.name === uavDetails.name && uav.range === uavDetails.range && uav.endurance === uavDetails.endurance);
+
+    if (!duplicateUAV) {
+      setSelectedUAVs([...selectedUAVs, uavDetails]);
+    }
+
     setSelectedValue("");
   };
+
 
   const handleAddCustomUAV = () => {
     setSelectedUAVs([...selectedUAVs, { name, range, endurance }]);
