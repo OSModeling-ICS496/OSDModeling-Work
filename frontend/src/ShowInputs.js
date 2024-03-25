@@ -1,7 +1,14 @@
 import React from 'react';
-import { Box, Card, CardContent, Container, Grid, Paper, Typography } from "@mui/material";
+import { Box, Card, CardContent, Container, Grid, Paper, Typography, Button } from "@mui/material";
 
 const ShowInputs = ({ uavData, minCoverage, coordData, timeData }) => {
+
+  const handleRunModel = () => {
+    // Logic to call the AWS model
+    // On success, open the Output component in a new tab
+    window.open('./output', '_blank');
+  };
+
     return (
         <Box sx={{'& > :not(style)': { m: 2 },}} style={{ textAlign: 'center' }}>
             {/* User Inpouts Displayed */}
@@ -77,6 +84,12 @@ const ShowInputs = ({ uavData, minCoverage, coordData, timeData }) => {
                     </Container>
                 </CardContent>
             </Card>
+
+          <Card>
+            <CardContent>
+              <Button variant="contained" onClick={handleRunModel}>Run Model</Button>
+            </CardContent>
+          </Card>
         </Box>
     );
 };

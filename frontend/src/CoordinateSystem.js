@@ -18,6 +18,15 @@ const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange })
     onTimeChange(time)
   }, [baseCoord, reconCoord, size, time, coverage]);
 
+  const integrateData = () => {
+    const integratedData = {
+      baseCoord,
+      reconCoord,
+      size,
+    };
+    return integratedData;
+  };
+
   const toggleMap = () => {
     setShowMap(!showMap);
   };
@@ -117,7 +126,7 @@ const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange })
 
         <Button variant="contained" onClick={toggleMap}>{showMap ? 'Hide Map' : 'Show Map'}</Button>
       </Box>
-      {showMap && (<Map coordData={[baseCoord, reconCoord]} />)}
+      {showMap && (<Map coordData={integrateData()} />)}
     </Container>
   );
 };
