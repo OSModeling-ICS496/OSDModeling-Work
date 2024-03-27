@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Card,CardContent,Box,Button,InputLabel,AccordionSummary,Typography,AccordionDetails,Accordion,Container,
+  Card,CardContent,Box,Button,InputLabel,AccordionSummary,Typography,AccordionDetails,Accordion,Container,CssBaseline, AppBar, Toolbar
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CoordinateSystem from "./CoordinateSystem";
@@ -68,61 +68,97 @@ const Inputs = () => {
     };
 
     return (
-        <Container>
-            <Accordion id="inputs">
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
+        <div>
+          <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <AppBar position="absolute">
+              <Toolbar>
+                <Typography
+                    component="h1"
+                    variant="h6"
+                    color="inherit"
+                    noWrap
+                    sx={{ flexGrow: 1 }}
                 >
-                    <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                        Modify Model
-                    </Typography>
-                    <Typography sx={{color: 'text.secondary'}}>Add/modify inputs to run model</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Box
-                        component="div"
-                        sx={{
-                            '& > :not(style)': { m: 1 },
-                        }}
-                        noValidate
-                        autoComplete="off"
+                  OSD Modeling
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <Box
+                component="main"
+                sx={{
+                  backgroundColor: (theme) =>
+                      theme.palette.mode === 'light'
+                          ? theme.palette.grey[100]
+                          : theme.palette.grey[900],
+                  flexGrow: 1,
+                  height: '100vh',
+                  overflow: 'auto',
+                }}
+            >
+              <Toolbar />
+              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+
+                <Container>
+                  <Accordion id="inputs">
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1-content"
+                        id="panel1-header"
                     >
+                      <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                        Modify Model
+                      </Typography>
+                      <Typography sx={{color: 'text.secondary'}}>Add/modify inputs to run model</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box
+                          component="div"
+                          sx={{
+                            '& > :not(style)': { m: 1 },
+                          }}
+                          noValidate
+                          autoComplete="off"
+                      >
                         <Card>
-                            <CardContent>
-                                {/* CoordinateSystem */}
-                                <CoordinateSystem 
-                                onCoordinateChange={handleCoordinateChange} 
+                          <CardContent>
+                            {/* CoordinateSystem */}
+                            <CoordinateSystem
+                                onCoordinateChange={handleCoordinateChange}
                                 onCoverageChange={handleCoverageChange}
                                 onTimeChange={handleTimeChange}
-                                />
-                                {/* Unmanned Systems */}
-                                <UnmannedSystems onUnmannedSystemsChange={handleUnmannedSystemsChange} />
-                            </CardContent>
+                            />
+                            {/* Unmanned Systems */}
+                            <UnmannedSystems onUnmannedSystemsChange={handleUnmannedSystemsChange} />
+                          </CardContent>
                         </Card>
 
                         <Button variant="contained" onClick={handleSubmit}>UPLOAD DATA</Button>
 
                         {/* API Response Display */}
                         <Card>
-                            <CardContent>
-                                <InputLabel>API Response:</InputLabel>
-                                <pre>{apiResponse}</pre>
-                            </CardContent>
+                          <CardContent>
+                            <InputLabel>API Response:</InputLabel>
+                            <pre>{apiResponse}</pre>
+                          </CardContent>
                         </Card>
-                    </Box>
-                </AccordionDetails>
-            </Accordion>
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
 
-            {/* ShowInputs Component */}
-            <ShowInputs
-                uavData={uavData}
-                minCoverage={minCoverage}
-                coordData={coordData}
-                timeData={timeData}
-            />
-        </Container>
+                  {/* ShowInputs Component */}
+                  <ShowInputs
+                      uavData={uavData}
+                      minCoverage={minCoverage}
+                      coordData={coordData}
+                      timeData={timeData}
+                  />
+                </Container>
+
+              </Container>
+            </Box>
+          </Box>
+        </div>
     );
 };
 

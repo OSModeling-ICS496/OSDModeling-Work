@@ -4,9 +4,8 @@ import { Box, Card, CardContent, Container, Grid, Paper, Typography, Button } fr
 const ShowInputs = ({ uavData, minCoverage, coordData, timeData }) => {
 
   const handleRunModel = () => {
-    // Logic to call the AWS model
-    // On success, open the Output component in a new tab
-    window.open('./output', '_blank');
+    const url = `${window.location.origin}/outputs?${coordData}`;
+    window.open(url, '_blank');
   };
 
     return (

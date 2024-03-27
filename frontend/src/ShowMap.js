@@ -11,7 +11,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-const Map = ({ coordData }) => {
+const ShowMap = ({ coordData }) => {
   const defaultCenter = [19.8987, -155.6659];
 
   const baseLocation = coordData['baseCoord'];
@@ -66,4 +66,4 @@ const Map = ({ coordData }) => {
   );
 };
 
-export default Map;
+export default ShowMap;
