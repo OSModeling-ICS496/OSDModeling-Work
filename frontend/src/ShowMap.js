@@ -22,7 +22,7 @@ const ShowMap = ({ coordData }) => {
   const mapKey = Object.keys(coordData).length;
 
   return (
-      <MapContainer center={mapCenter} zoom={12} style={{ height: '600px', width: '100%' }} key={mapKey}>
+      <MapContainer center={mapCenter} zoom={12} style={{ height: '80vh', width: '70vw' }} key={mapKey}>
         <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

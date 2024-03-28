@@ -1,13 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import ShowMap from './ShowMap';
-import { Select, MenuItem, FormControl, Box, Typography, CssBaseline, Container, Toolbar, AppBar  } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import {
+  Select,
+  MenuItem,
+  FormControl,
+  Box,
+  Typography,
+  CssBaseline,
+  AppBar,
+  Toolbar,
+  Container,
+  Grid
+} from '@mui/material';
 
-const Outputs = ({ coordData}) => {
+const Outputs = () => {
   const [minimization, setMinimization] = useState('minimize1');
   const [mapData, setMapData] = useState([]);
   const [droneData, setDroneData] = useState({});
-  const location = useLocation();
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem('coordData'));
+    if (data) {
+      setMapData(data);
+      localStorage.removeItem('coordData');
+    }
+  }, []);
 
   const fetchModelData = async (minimizationOption) => {
     const mockData = {
@@ -84,13 +101,10 @@ const Outputs = ({ coordData}) => {
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    console.log(coordData);
-
     fetchModelData(minimization).then(data => {
-      setMapData(data);
+      setDroneData(data);
     });
-  }, [minimization, location.search]);
+  }, [minimization]);
 
   const handleChange = (event) => {
     setMinimization(event.target.value);
@@ -107,54 +121,41 @@ const Outputs = ({ coordData}) => {
                   variant="h6"
                   color="inherit"
                   noWrap
-                  sx={{ flexGrow: 1 }}
+                  sx={{ flexGrow: 1,
+                  display: 'absolute'}}
               >
-                OSD Modeling
+                Results
               </Typography>
             </Toolbar>
           </AppBar>
-          <Box
-              component="main"
-              sx={{
-                backgroundColor: (theme) =>
-                    theme.palette.mode === 'light'
-                        ? theme.palette.grey[100]
-                        : theme.palette.grey[900],
-                flexGrow: 1,
-                height: '100vh',
-                overflow: 'auto',
-              }}
-          >
-            <Toolbar />
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
 
-              <Box display="flex" flexDirection="row" width="100%">
-                <Box width="30%" p={2}>
-                  <FormControl fullWidth>
-                    <Select value={minimization} onChange={handleChange}>
-                      <MenuItem value="minimize1">Minimize 1</MenuItem>
-                      <MenuItem value="minimize2">Minimize 2</MenuItem>
-                      <MenuItem value="minimize3">Minimize 3</MenuItem>
-                    </Select>
-                  </FormControl>
+          <Grid container spacing={2} sx={{ mt: 12, mb: 4 }}>
+            <Grid item xs={3}>
+              <Container sx={{ ml: 9}}>
+                <FormControl>
+                  <Select value={minimization} onChange={handleChange}>
+                    <MenuItem value="minimize1">Min Number Of Drones</MenuItem>
+                    <MenuItem value="minimize2">Max Coverage</MenuItem>
+                    <MenuItem value="minimize3">Max Time</MenuItem>
+                  </Select>
+                </FormControl>
 
-                  {droneData.drones && droneData.drones.map((drone, index) => (
-                      <Box key={index} mt={2}>
-                        <Typography variant="h6">{drone.name}</Typography>
-                        <Typography>Endurance: {drone.endurance} hours</Typography>
-                        <Typography>Speed: {drone.speed} km/h</Typography>
-                        <Typography>Coverage Size: {drone.coverageSize} km²</Typography>
-                        <Typography>Number of Drones: {drone.numberOfDrones}</Typography>
-                      </Box>
-                  ))}
-                </Box>
-                <Box width="70%">
-                  <ShowMap coordData={coordData} />
-                </Box>
-              </Box>
+                {droneData.drones && droneData.drones.map((drone, index) => (
+                    <Box key={index} mt={2}>
+                      <Typography variant="h6">{drone.name}</Typography>
+                      <Typography>Endurance: {drone.endurance} hours</Typography>
+                      <Typography>Speed: {drone.speed} km/h</Typography>
+                      <Typography>Coverage Size: {drone.coverageSize} km²</Typography>
+                      <Typography>Number of Drones: {drone.numberOfDrones}</Typography>
+                    </Box>
+                ))}
+              </Container>
+            </Grid>
 
-            </Container>
-          </Box>
+            <Grid item xs={8} >
+              <ShowMap coordData={mapData}/>
+            </Grid>
+          </Grid>
         </Box>
       </div>
   );

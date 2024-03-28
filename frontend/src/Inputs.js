@@ -1,18 +1,31 @@
 import React, { useState } from 'react';
 import {
-  Card,CardContent,Box,Button,InputLabel,AccordionSummary,Typography,AccordionDetails,Accordion,Container,CssBaseline, AppBar, Toolbar
+  Card,CardContent,Box,Button,InputLabel,AccordionSummary,Typography,AccordionDetails,Accordion,Container,CssBaseline, AppBar, Toolbar, IconButton, Tooltip
 } from "@mui/material";
+import MapIcon from '@mui/icons-material/Map';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CoordinateSystem from "./CoordinateSystem";
 import UnmannedSystems from "./UnmannedSystems";
 import ShowInputs from "./ShowInputs";
+import ShowMap from "./ShowMap";
 
 const Inputs = () => {
     const [coordData, setCoordData] = useState({ baseCoord: {}, reconCoord: {} });
     const [minCoverage, setMinCoverage] = useState('');
     const [uavData, setUavData] = useState({});
     const [apiResponse, setApiResponse] = useState("");
-    const [timeData, setTimeData] = useState(''); 
+    const [timeData, setTimeData] = useState('');
+    const [showMap, setShowMap] = useState(false);
+
+    const toggleMap = () => {
+        setShowMap(!showMap);
+    };
+
+    const handleRunModel = () => {
+        localStorage.setItem('coordData', JSON.stringify(coordData));
+        const url = window.location.origin + '/outputs';
+        window.open(url, '_blank');
+    };
 
     const handleCoordinateChange = (data) => {
         setCoordData(data);
@@ -80,83 +93,86 @@ const Inputs = () => {
                     noWrap
                     sx={{ flexGrow: 1 }}
                 >
-                  OSD Modeling
+                  Inputs
                 </Typography>
+                  <Tooltip title={showMap ? 'Hide Map' : 'Show Map'}>
+                      <IconButton color="gray" onClick={toggleMap} sx={{ transform: 'scale(1.2)', mr: '5px' }}>
+                          <MapIcon />
+                      </IconButton>
+                  </Tooltip>
+
+
+                  <Button variant="contained" color="success" onClick={handleRunModel}>Run Model</Button>
               </Toolbar>
+                {
+                    showMap &&
+                    (
+                        <Box sx={{ position: 'absolute', right: '60%', top: '5rem', width: '20vw'}}>
+                            <ShowMap coordData={coordData} />
+                        </Box>
+                    )
+                }
             </AppBar>
-            <Box
-                component="main"
-                sx={{
-                  backgroundColor: (theme) =>
-                      theme.palette.mode === 'light'
-                          ? theme.palette.grey[100]
-                          : theme.palette.grey[900],
-                  flexGrow: 1,
-                  height: '100vh',
-                  overflow: 'auto',
-                }}
-            >
-              <Toolbar />
-              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
 
-                <Container>
-                  <Accordion id="inputs">
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1-content"
-                        id="panel1-header"
-                    >
-                      <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                        Modify Model
-                      </Typography>
-                      <Typography sx={{color: 'text.secondary'}}>Add/modify inputs to run model</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Box
-                          component="div"
-                          sx={{
-                            '& > :not(style)': { m: 1 },
-                          }}
-                          noValidate
-                          autoComplete="off"
-                      >
-                        <Card>
-                          <CardContent>
-                            {/* CoordinateSystem */}
-                            <CoordinateSystem
-                                onCoordinateChange={handleCoordinateChange}
-                                onCoverageChange={handleCoverageChange}
-                                onTimeChange={handleTimeChange}
-                            />
-                            {/* Unmanned Systems */}
-                            <UnmannedSystems onUnmannedSystemsChange={handleUnmannedSystemsChange} />
-                          </CardContent>
-                        </Card>
+              <Container maxWidth="lg" sx={{ mt: 12, mb: 4 }}>
 
-                        <Button variant="contained" onClick={handleSubmit}>UPLOAD DATA</Button>
+                  <Container>
+                      <Accordion id="inputs">
+                          <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              aria-controls="panel1-content"
+                              id="panel1-header"
+                          >
+                              <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                                  Modify Model
+                              </Typography>
+                              <Typography sx={{color: 'text.secondary'}}>Add/modify inputs to run model</Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                              <Box
+                                  component="div"
+                                  sx={{
+                                      '& > :not(style)': { m: 1 },
+                                  }}
+                                  noValidate
+                                  autoComplete="off"
+                              >
+                                  <Card>
+                                      <CardContent>
+                                          {/* CoordinateSystem */}
+                                          <CoordinateSystem
+                                              onCoordinateChange={handleCoordinateChange}
+                                              onCoverageChange={handleCoverageChange}
+                                              onTimeChange={handleTimeChange}
+                                          />
+                                          {/* Unmanned Systems */}
+                                          <UnmannedSystems onUnmannedSystemsChange={handleUnmannedSystemsChange} />
+                                      </CardContent>
+                                  </Card>
 
-                        {/* API Response Display */}
-                        <Card>
-                          <CardContent>
-                            <InputLabel>API Response:</InputLabel>
-                            <pre>{apiResponse}</pre>
-                          </CardContent>
-                        </Card>
-                      </Box>
-                    </AccordionDetails>
-                  </Accordion>
+                                  <Button variant="contained" onClick={handleSubmit}>UPLOAD DATA</Button>
 
-                  {/* ShowInputs Component */}
-                  <ShowInputs
-                      uavData={uavData}
-                      minCoverage={minCoverage}
-                      coordData={coordData}
-                      timeData={timeData}
-                  />
-                </Container>
+                                  {/* API Response Display */}
+                                  <Card>
+                                      <CardContent>
+                                          <InputLabel>API Response:</InputLabel>
+                                          <pre>{apiResponse}</pre>
+                                      </CardContent>
+                                  </Card>
+                              </Box>
+                          </AccordionDetails>
+                      </Accordion>
+
+                      {/* ShowInputs Component */}
+                      <ShowInputs
+                          uavData={uavData}
+                          minCoverage={minCoverage}
+                          coordData={coordData}
+                          timeData={timeData}
+                      />
+                  </Container>
 
               </Container>
-            </Box>
           </Box>
         </div>
     );

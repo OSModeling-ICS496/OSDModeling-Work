@@ -8,7 +8,6 @@ import SaveIcon from '@mui/icons-material/Save';
 const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
   const [options, setOptions] = useState([]);
   const [selectedUAVs, setSelectedUAVs] = useState([]);
-  const [selectedValue, setSelectedValue] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const [editValues, setEditValues] = useState({ range: '', endurance: '' });
   const [dialogOpen, setDialogOpen] = useState(false);
