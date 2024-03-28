@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-  OutlinedInput,Box,Button,Container,InputLabel,InputAdornment,Grid,FormControl,
+  OutlinedInput,Box,Container,InputLabel,InputAdornment,Grid,FormControl,
 } from "@mui/material";
-import Map from "./Map";
 
 const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange }) => {
   const [baseCoord, setBaseCoord] = useState({ lat: '', lng: '' });
@@ -10,17 +9,12 @@ const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange })
   const [size, setSize] = useState('');
   const [time, setTime] = useState('');
   const [coverage, setCoverage] = useState('');
-  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     onCoordinateChange({ baseCoord, reconCoord, size});
     onCoverageChange(coverage);
-    onTimeChange(time)
-  }, [baseCoord, reconCoord, size, time, coverage]);
-
-  const toggleMap = () => {
-    setShowMap(!showMap);
-  };
+    onTimeChange(time);
+  }, [baseCoord, reconCoord, size, time, coverage, onCoordinateChange, onCoverageChange, onTimeChange]);
 
   return (
     <Container>
@@ -114,10 +108,7 @@ const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange })
             </FormControl>
           </Grid>
         </Grid>
-
-        <Button variant="contained" onClick={toggleMap}>{showMap ? 'Hide Map' : 'Show Map'}</Button>
       </Box>
-      {showMap && (<Map coordData={[baseCoord, reconCoord]} />)}
     </Container>
   );
 };
