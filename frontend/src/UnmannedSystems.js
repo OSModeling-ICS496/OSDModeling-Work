@@ -39,7 +39,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
 
   useEffect(() => {
     onUnmannedSystemsChange(selectedUAVs);
-  }, [selectedUAVs]);
+  }, [selectedUAVs, onUnmannedSystemsChange]);
 
   const handleEdit = (index) => {
     setEditIndex(index);
