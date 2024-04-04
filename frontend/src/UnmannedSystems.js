@@ -9,11 +9,11 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
   const [options, setOptions] = useState([]);
   const [selectedUAVs, setSelectedUAVs] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-  const [editValues, setEditValues] = useState({ range: '', endurance: '' });
+  const [editValues, setEditValues] = useState({ coverage: '', endurance: '' });
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [tempUAV, setTempUAV] = useState({ name: '', range: '', endurance: '', speed: '' });
+  const [tempUAV, setTempUAV] = useState({ name: '', coverage: '', endurance: '', speed: '' });
   const [name, setName] = useState("");
-  const [range, setRange] = useState("");
+  const [coverage, setCoverage] = useState("");
   const [endurance, setEndurance] = useState("");
   const [speed, setSpeed] = useState("");
 
@@ -25,7 +25,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
         complete: (result) => {
           const parsedOptions = result.data.map(item => ({
             name: item['Name(UAV)'],
-            range: item['Range(in km)'],
+            coverage: item['Coverage(in km)'],
             endurance: item['Endurance(in hours)'],
             speed: item['Speed (in hours/km)']
           })).filter(uav => uav.name);
@@ -44,7 +44,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
   const handleEdit = (index) => {
     setEditIndex(index);
     setEditValues({
-      range: selectedUAVs[index].range,
+      coverage: selectedUAVs[index].coverage,
       endurance: selectedUAVs[index].endurance,
       speed: selectedUAVs[index].speed,
     });
@@ -65,7 +65,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
     const selectedName = event.target.value;
     const uavDetails = options.find(option => option.name === selectedName);
     // Initialize tempUAV with existing UAV details
-    setTempUAV({ ...uavDetails, range: uavDetails.range || '', endurance: uavDetails.endurance || '', speed: uavDetails.speed || '' });
+    setTempUAV({ ...uavDetails, coverage: uavDetails.coverage || '', endurance: uavDetails.endurance || '', speed: uavDetails.speed || '' });
     setDialogOpen(true);
   };
 
@@ -76,7 +76,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
   const handleDialogSave = () => {
     const updatedUAV = {
       ...tempUAV,
-      range: tempUAV.range || tempUAV.range,
+      coverage: tempUAV.coverage || tempUAV.coverage,
       endurance: tempUAV.endurance || tempUAV.endurance,
       speed: tempUAV.speed || tempUAV.speed,
     };
@@ -92,9 +92,9 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
   };
 
   const handleAddCustomUAV = () => {
-    setSelectedUAVs([...selectedUAVs, { name, range, endurance, speed }]);
+    setSelectedUAVs([...selectedUAVs, { name, coverage, endurance, speed }]);
     setName("");
-    setRange("");
+    setCoverage("");
     setEndurance("");
     setSpeed("");
   };
@@ -118,15 +118,15 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
       header: true,
       complete: (result) => {
         // Validate CSV structure
-        if (!result.data.every(item => 'Name' in item && 'Range' in item && 'Endurance' in item && 'Speed' in item)) {
-          alert('CSV file should contain Name, Range, Endurance, and Speed columns.');
+        if (!result.data.every(item => 'Name' in item && 'Coverage' in item && 'Endurance' in item && 'Speed' in item)) {
+          alert('CSV file should contain Name, Coverage, Endurance, and Speed columns.');
           return;
         }
 
         // CSV structure is valid, add data to selectedUAVs state
         const newData = result.data.map(item => ({
           name: item['Name'],
-          range: item['Range'],
+          coverage: item['Coverage'],
           endurance: item['Endurance'],
           speed: item['Speed']
         }));
@@ -183,13 +183,13 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
               <TextField
                   autoFocus
                   margin="dense"
-                  id="range"
-                  label="Range (in km)"
+                  id="coverage"
+                  label="Coverage (in km)"
                   type="text"
                   fullWidth
                   variant="standard"
-                  value={tempUAV.range}
-                  onChange={(e) => handleInputChange(e, 'range')}
+                  value={tempUAV.coverage}
+                  onChange={(e) => handleInputChange(e, 'coverage')}
               />
               <TextField
                   margin="dense"
@@ -241,9 +241,9 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
 
           <Grid item md={3}>
             <TextField
-                label="Range (in km)"
-                value={range}
-                onChange={(e) => setRange(e.target.value)}
+                label="Coverage (in km)"
+                value={coverage}
+                onChange={(e) => setCoverage(e.target.value)}
                 fullWidth
             />
           </Grid>
@@ -279,9 +279,9 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
                   {editIndex === index ? (
                       <>
                         <TextField
-                            label="Range (in km)"
-                            value={editValues.range}
-                            onChange={(e) => handleChangeEdit('range', e.target.value)}
+                            label="Coverage (in km)"
+                            value={editValues.coverage}
+                            onChange={(e) => handleChangeEdit('coverage', e.target.value)}
                             style={{ marginRight: '10px' }}
                         />
                         <TextField
@@ -303,7 +303,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
                   ) : (
                       <>
                         <ListItemText>
-                          {`Name: ${uav.name}, Range: ${uav.range}, Endurance: ${uav.endurance}, Speed: ${uav.speed}`}
+                          {`Name: ${uav.name}, Coverage: ${uav.coverage}, Endurance: ${uav.endurance}, Speed: ${uav.speed}`}
                         </ListItemText>
                         <IconButton edge="end" aria-label="edit" onClick={() => handleEdit(index)}>
                           <EditIcon />
