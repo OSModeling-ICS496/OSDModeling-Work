@@ -17,7 +17,7 @@ const ShowMap = ({ coordData }) => {
   const baseLocation = coordData['baseCoord'];
   const reconLocation = coordData['reconCoord'];
 
-  const mapCenter = coordData && Object.keys(coordData).length > 0 ? [reconLocation.lat, reconLocation.lng] : defaultCenter;
+  const mapCenter = coordData && Object.keys(coordData).length > 0 ? [reconLocation.lat, reconLocation.long] : defaultCenter;
 
   const mapKey = Object.keys(coordData).length;
 
@@ -28,22 +28,22 @@ const ShowMap = ({ coordData }) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {baseLocation && (
-            <Marker position={[baseLocation.lat, baseLocation.lng]}>
+            <Marker position={[baseLocation.lat, baseLocation.long]}>
               <Popup>Base Location <br/>
-                Lat: {baseLocation.lat}, Lng: {baseLocation.lng}
+                Lat: {baseLocation.lat}, long: {baseLocation.long}
               </Popup>
             </Marker>
         )}
         {reconLocation && (
             <>
-              <Marker position={[reconLocation.lat, reconLocation.lng]}>
+              <Marker position={[reconLocation.lat, reconLocation.long]}>
                 <Popup>Recon Location <br/>
-                  Lat: {reconLocation.lat}, Lng: {reconLocation.lng} <br/>
+                  Lat: {reconLocation.lat}, long: {reconLocation.long} <br/>
                   Size: {coordData.size} km² <br/>
                   Radius: {(coordData.size / 3.141592653589793) ** 0.5} km
                 </Popup>
                 <Circle
-                    center={[reconLocation.lat, reconLocation.lng]}
+                    center={[reconLocation.lat, reconLocation.long]}
                     radius={(coordData.size * 1_000_000 / 3.141592653589793) ** 0.5}
                     color="blue"
                     fillColor="blue"
@@ -54,8 +54,8 @@ const ShowMap = ({ coordData }) => {
               {baseLocation && (
                   <Polyline
                       positions={[
-                        [baseLocation.lat, baseLocation.lng],
-                        [reconLocation.lat, reconLocation.lng],
+                        [baseLocation.lat, baseLocation.long],
+                        [reconLocation.lat, reconLocation.long],
                       ]}
                       color="red"
                   />

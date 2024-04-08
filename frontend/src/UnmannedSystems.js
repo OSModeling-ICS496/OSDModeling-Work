@@ -25,9 +25,9 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
         complete: (result) => {
           const parsedOptions = result.data.map(item => ({
             name: item['Name(UAV)'],
-            coverage: item['Coverage(in km)'],
-            endurance: item['Endurance(in hours)'],
-            speed: item['Speed (in hours/km)']
+            coverage: item['Coverage (km²)'],
+            endurance: item['Endurance (hours)'],
+            speed: item['Speed (km/hour)']
           })).filter(uav => uav.name);
           setOptions(parsedOptions);
         }
@@ -184,7 +184,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
                   autoFocus
                   margin="dense"
                   id="coverage"
-                  label="Coverage (in km)"
+                  label="Coverage (km²)"
                   type="text"
                   fullWidth
                   variant="standard"
@@ -194,7 +194,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
               <TextField
                   margin="dense"
                   id="endurance"
-                  label="Endurance (in hours)"
+                  label="Endurance (hours)"
                   type="text"
                   fullWidth
                   variant="standard"
@@ -204,7 +204,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
               <TextField
                   margin="dense"
                   id="speed"
-                  label="Speed (in km/h)"
+                  label="Speed (km/h)"
                   type="text"
                   fullWidth
                   variant="standard"
@@ -241,7 +241,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
 
           <Grid item md={3}>
             <TextField
-                label="Coverage (in km)"
+                label="Coverage (km²)"
                 value={coverage}
                 onChange={(e) => setCoverage(e.target.value)}
                 fullWidth
@@ -250,7 +250,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
 
           <Grid item md={3}>
             <TextField
-                label="Endurance (in hours)"
+                label="Endurance (hours)"
                 value={endurance}
                 onChange={(e) => setEndurance(e.target.value)}
                 fullWidth
@@ -259,7 +259,7 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
 
           <Grid item md={3}>
             <TextField
-                label="Speed (in hours/km)"
+                label="Speed (km/hour)"
                 value={speed}
                 onChange={(e) => setSpeed(e.target.value)}
                 fullWidth
