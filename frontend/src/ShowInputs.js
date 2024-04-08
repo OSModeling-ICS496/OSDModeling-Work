@@ -40,11 +40,11 @@ const ShowInputs = ({ uavData, minCoverage, coordData, timeData }) => {
                                     <Typography variant="h6">Coordinates</Typography>
                                     <Typography variant="h6">Base:</Typography>
                                     {coordData.baseCoord && (
-                                        <Typography color="#f44336" variant="h5">{coordData.baseCoord.lat}N, {coordData.baseCoord.lng}E</Typography>
+                                        <Typography color="#f44336" variant="h5">{coordData.baseCoord.lat}N, {coordData.baseCoord.long}E</Typography>
                                     )}
                                          <Typography variant="h6">Recon:</Typography>
                                     {coordData.reconCoord && (
-                                        <Typography color="#f44336" variant="h5">{coordData.reconCoord.lat}N, {coordData.reconCoord.lng}E</Typography>
+                                        <Typography color="#f44336" variant="h5">{coordData.reconCoord.lat}N, {coordData.reconCoord.long}E</Typography>
                                     )}
                                 </Paper>
                             </Grid>

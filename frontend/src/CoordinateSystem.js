@@ -4,8 +4,8 @@ import {
 } from "@mui/material";
 
 const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange }) => {
-  const [baseCoord, setBaseCoord] = useState({ lat: '', lng: '' });
-  const [reconCoord, setReconCoord] = useState({ lat: '', lng: '' });
+  const [baseCoord, setBaseCoord] = useState({ lat: '', long: '' });
+  const [reconCoord, setReconCoord] = useState({ lat: '', long: '' });
   const [size, setSize] = useState('');
   const [time, setTime] = useState('');
   const [coverage, setCoverage] = useState('');
@@ -37,8 +37,8 @@ const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange })
               <OutlinedInput
                 placeholder="Longitude"
                 required
-                value={baseCoord.lng}
-                onChange={(e) => setBaseCoord({ ...baseCoord, lng: e.target.value })}
+                value={baseCoord.long}
+                onChange={(e) => setBaseCoord({ ...baseCoord, long: e.target.value })}
                 endAdornment={<InputAdornment position="end">E°</InputAdornment>}
               />
             </FormControl>
@@ -63,8 +63,8 @@ const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange })
               <OutlinedInput
                 placeholder="Longitude"
                 required
-                value={reconCoord.lng}
-                onChange={(e) => setReconCoord({ ...reconCoord, lng: e.target.value })}
+                value={reconCoord.long}
+                onChange={(e) => setReconCoord({ ...reconCoord, long: e.target.value })}
                 endAdornment={<InputAdornment position="end">E°</InputAdornment>}
               />
             </FormControl>

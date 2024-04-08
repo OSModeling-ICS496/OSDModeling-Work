@@ -47,7 +47,8 @@ const Inputs = () => {
         const integratedData = {
             coordData,
             minCoverage,
-            uavData
+            uavData,
+            timeData
         };
         return integratedData;
     };
@@ -63,7 +64,7 @@ const Inputs = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ selectedUAVs: jsonData }),
+                body: JSON.stringify({ jsonData }),
             });
 
             if (!response.ok) {

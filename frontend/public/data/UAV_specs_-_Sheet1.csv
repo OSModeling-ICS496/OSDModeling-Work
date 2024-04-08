@@ -1,12 +1,10 @@
-Name(UAV),Range(in km),Endurance(in hours)
-Flexrotor,900.00,29.00
-VBAT ,300.00,10.00
-Global Hawk,22800.00,38.00
-Triton,15200.00,30.00
-Reaper,1900.00,27.00
-Gray Eagle,6000.00,25.00
-Shadow,110.00,6.00
-Raven,6.00,1.00
-Puma,15.00,4.00
-Sentinel,1668.00,6.00
-X-47B,2400.00,4.00
+Name(UAV),Coverage (km^2),Endurance (hours),Speed (km/hour)
+Flexrotor,,30.00,85.00
+VBAT ,,10.00,90.00
+Global Hawk,,31.00,620.00
+Triton,,24.00,600.00
+Reaper,,27.00,440.00
+Gray Eagle,,25.00,310.00
+Shadow,,8.00,170.00
+Raven,,1.50,41.00
+Puma,,5.00,60.00
