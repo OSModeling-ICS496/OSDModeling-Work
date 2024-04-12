@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback  } from 'react';
 import ShowMap from './ShowMap';
 import {
   Select,
@@ -9,7 +9,7 @@ import {
   Toolbar,
   Container,
   Grid,
-  IconButton, Button
+  IconButton
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
@@ -91,11 +91,11 @@ const Outputs = () => {
     }
   }, []);
 
-  const fetchModelData = async (minimizationOption) => {
+  const fetchModelData = useCallback(async (minimizationOption) => {
     const minimizationMapping = {
-      minimize1: "Objective 3 - Minimize Drones Used",
-      minimize2: "Objective 1 - Maximize Coverage Area",
-      minimize3: "Objective 2 - Maximize duration at Point B",
+      minimize1: "Objective 1 - Maximize Coverage Area",
+      minimize2: "Objective 2 - Maximize duration at Point B",
+      minimize3: "Objective 3 - Minimize Drones Used",
     };
 
     const apiData = apiResponseData;
@@ -113,7 +113,7 @@ const Outputs = () => {
     }
 
     return relevantData;
-  };
+  }, [apiResponseData]);
 
   const handleChange = (event) => {
     setMinimization(event.target.value);
@@ -123,7 +123,7 @@ const Outputs = () => {
     fetchModelData(minimization).then(data => {
       setDroneData(data);
     });
-  }, [minimization]);
+  }, [minimization, fetchModelData]);
 
   return (
       <div>
@@ -182,9 +182,9 @@ const Outputs = () => {
               <Container>
                 <FormControl fullWidth>
                   <Select value={minimization} onChange={handleChange}>
-                    <MenuItem value="minimize1">Minimize Drones Used</MenuItem>
-                    <MenuItem value="minimize2">Maximize Coverage Area</MenuItem>
-                    <MenuItem value="minimize3">Maximize duration at Point B</MenuItem>
+                    <MenuItem value="minimize1">Maximize Coverage Area</MenuItem>
+                    <MenuItem value="minimize2">Maximize duration at Point B</MenuItem>
+                    <MenuItem value="minimize3">Minimize Drones Used</MenuItem>
                   </Select>
                 </FormControl>
                 {droneData["Message"] && <Typography variant="h5" color="red" sx={{mt: 4}}>{droneData["Message"]}</Typography>}
