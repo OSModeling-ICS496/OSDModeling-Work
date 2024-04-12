@@ -9,14 +9,14 @@ import {
   Toolbar,
   Container,
   Grid,
-  IconButton
+  IconButton, Button
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
-import { mainListItems, secondaryListItems } from './listItems';
+import {inputListItems, outputListItems} from './DataManagement';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -66,12 +66,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-
-
 const Outputs = () => {
   const [minimization, setMinimization] = useState('minimize1');
   const [mapData, setMapData] = useState([]);
   const [droneData, setDroneData] = useState({});
+  const [apiResponseData, setApiResponseData] = useState({});
   const [open, setOpen] = React.useState(true);
 
   const toggleDrawer = () => {
@@ -79,85 +78,45 @@ const Outputs = () => {
   };
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem('coordData'));
+    // Fetching map data
+    const data = JSON.parse(localStorage.getItem('inputData'));
     if (data) {
-      setMapData(data);
-      localStorage.removeItem('coordData');
+      setMapData(data.coordData);
+    }
+
+    // Fetching API response data
+    const apiData = JSON.parse(localStorage.getItem('outputData'));
+    if (apiData) {
+      setApiResponseData(apiData);
     }
   }, []);
 
   const fetchModelData = async (minimizationOption) => {
-    const mockData = {
-      minimize1: "minNumberOfDrones",
-      minimize2: "maxCoverage",
-      minimize3: "maxTime",
+    const minimizationMapping = {
+      minimize1: "Objective 3 - Minimize Drones Used",
+      minimize2: "Objective 1 - Maximize Coverage Area",
+      minimize3: "Objective 2 - Maximize duration at Point B",
     };
 
-    const outputData = {
-      minNumberOfDrones: {
-        coverageTime: "4",
-        coverageSize: "15",
-        totalNumberOfDrones: 1,
-        drones: [
-          {
-            name: "drone1",
-            endurance: "4",
-            speed: "50",
-            coverageSize: "15",
-            numberOfDrones: 1
-          }
-        ]
-      },
-      maxCoverage: {
-        coverageTime: "6",
-        coverageSize: "20",
-        totalNumberOfDrones: 5,
-        drones: [
-          {
-            name: "drone2",
-            endurance: "6",
-            speed: "40",
-            coverageSize: "15",
-            numberOfDrones: 2
-          },
-          {
-            name: "drone3",
-            endurance: "5",
-            speed: "45",
-            coverageSize: "5",
-            numberOfDrones: 3
-          }
-        ]
-      },
-      maxTime: {
-        coverageTime: "8",
-        coverageSize: "10",
-        totalNumberOfDrones: 4,
-        drones: [
-          {
-            name: "drone4",
-            endurance: "8",
-            speed: "35",
-            coverageSize: "10",
-            numberOfDrones: 2
-          },
-          {
-            name: "drone5",
-            endurance: "8",
-            speed: "35",
-            coverageSize: "10",
-            numberOfDrones: 2
-          }
-        ]
-      },
-      userInput: {
-        minCoverage: "80",
-        coverageTime: "8",
-        coverageArea: "20"
-      }
-    };
+    const apiData = apiResponseData;
 
-    return outputData[mockData[minimizationOption]];
+    if (!apiData) {
+      console.error('No API data found');
+      return {};
+    }
+
+    const relevantData = apiData[minimizationMapping[minimizationOption]];
+
+    if (!relevantData) {
+      console.error('Relevant data not found for the minimization option:', minimizationOption);
+      return {};
+    }
+
+    return relevantData;
+  };
+
+  const handleChange = (event) => {
+    setMinimization(event.target.value);
   };
 
   useEffect(() => {
@@ -165,10 +124,6 @@ const Outputs = () => {
       setDroneData(data);
     });
   }, [minimization]);
-
-  const handleChange = (event) => {
-    setMinimization(event.target.value);
-  };
 
   return (
       <div>
@@ -216,39 +171,46 @@ const Outputs = () => {
             </Toolbar>
             <Divider />
             <List component="nav">
-              {mainListItems }
-              <Divider sx={{ my: 1 }} />
-              {secondaryListItems  }
+              {inputListItems }
+              <Divider sx={{ my: 10 }} />
+              {outputListItems  }
             </List>
           </Drawer>
 
-          <Grid container spacing={2} sx={{ mt: 12, mb: 4}}>
-            <Grid item xs={3}>
-              <Container sx={{ ml: 9}}>
-                <FormControl>
+          <Grid container spacing={2} sx={{ mt: 12, mb: 4 }}>
+            <Grid item xs={12} sm={4} md={3}>
+              <Container>
+                <FormControl fullWidth>
                   <Select value={minimization} onChange={handleChange}>
-                    <MenuItem value="minimize1">Min Number Of Drones</MenuItem>
-                    <MenuItem value="minimize2">Max Coverage</MenuItem>
-                    <MenuItem value="minimize3">Max Time</MenuItem>
+                    <MenuItem value="minimize1">Minimize Drones Used</MenuItem>
+                    <MenuItem value="minimize2">Maximize Coverage Area</MenuItem>
+                    <MenuItem value="minimize3">Maximize duration at Point B</MenuItem>
                   </Select>
                 </FormControl>
+                {droneData["Message"] && <Typography variant="h5" color="red" sx={{mt: 4}}>{droneData["Message"]}</Typography>}
 
-                {droneData.drones && droneData.drones.map((drone, index) => (
+                {droneData["Combination"] && droneData["Combination"].map((drone, index) => (
                     <Box key={index} mt={2}>
                       <Typography variant="h6">{drone.name}</Typography>
+                      <Typography>Coverage: {drone.coverage} km²</Typography>
                       <Typography>Endurance: {drone.endurance} hours</Typography>
-                      <Typography>Speed: {drone.speed} km/h</Typography>
-                      <Typography>Coverage Size: {drone.coverageSize} km²</Typography>
-                      <Typography>Number of Drones: {drone.numberOfDrones}</Typography>
+                      <Typography>Speed: {drone.speed} km/hour</Typography>
                     </Box>
                 ))}
               </Container>
+
+              <Container sx={{ mt: 8 }}>
+                {droneData["Total Coverage"] && <Typography>Total Coverage: {droneData["Total Coverage"]} {droneData["Unit"]}</Typography>}
+                {droneData["Max duration at Point B"] && <Typography>Max duration at Point B: {droneData["Max duration at Point B"].toFixed(2)} {droneData["Unit"]}</Typography>}
+                {droneData["Drones Used"] && <Typography>Drones Used: {droneData["Drones Used"]}</Typography>}
+              </Container>
             </Grid>
 
-            <Grid item xs={8}>
-              <ShowMap coordData={mapData}/>
+            <Grid item xs={12} sm={8} md={8.5}>
+              <ShowMap coordData={mapData} />
             </Grid>
           </Grid>
+
         </Box>
       </div>
   );

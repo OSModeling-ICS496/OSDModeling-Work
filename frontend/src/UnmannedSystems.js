@@ -41,6 +41,16 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
     onUnmannedSystemsChange(selectedUAVs);
   }, [selectedUAVs, onUnmannedSystemsChange]);
 
+  useEffect(() => {
+    const storedInputData = localStorage.getItem('inputData');
+    if (storedInputData) {
+      const parsedInputData = JSON.parse(storedInputData);
+      if (parsedInputData) {
+        if (parsedInputData.uavData) setSelectedUAVs(parsedInputData.uavData);
+      }
+    }
+  }, []);
+
   const handleEdit = (index) => {
     setEditIndex(index);
     setEditValues({

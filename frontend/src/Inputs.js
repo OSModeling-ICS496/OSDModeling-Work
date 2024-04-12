@@ -1,19 +1,31 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Card,CardContent,Box,Button,InputLabel,AccordionSummary,Typography,AccordionDetails,Accordion,Container, Toolbar, IconButton, Tooltip
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Container,
+    IconButton,
+    Toolbar,
+    Tooltip,
+    Typography,
+    Alert, Grid
 } from "@mui/material";
-import { styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
-import { mainListItems, secondaryListItems } from './listItems';
+import {inputListItems, outputListItems} from './DataManagement';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import MapIcon from '@mui/icons-material/Map';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CoordinateSystem from "./CoordinateSystem";
+import CoordinateAndParameters from "./CoordinateAndParameters";
 import UnmannedSystems from "./UnmannedSystems";
 import ShowInputs from "./ShowInputs";
 import ShowMap from "./ShowMap";
@@ -68,10 +80,12 @@ const Inputs = () => {
     const [coordData, setCoordData] = useState({ baseCoord: {}, reconCoord: {} });
     const [minCoverage, setMinCoverage] = useState('');
     const [uavData, setUavData] = useState({});
-    const [apiResponse, setApiResponse] = useState("");
-    const [timeData, setTimeData] = useState('');
+    const [durationData, setDurationData] = useState('');
     const [showMap, setShowMap] = useState(false);
     const [open, setOpen] = React.useState(true);
+    // const [apiResponse, setApiResponse] = useState("");
+    const [error, setError] = useState("");
+    const [showError, setShowError] = useState(false);
 
     const toggleDrawer = () => {
       setOpen(!open);
@@ -79,12 +93,6 @@ const Inputs = () => {
 
     const toggleMap = () => {
         setShowMap(!showMap);
-    };
-
-    const handleRunModel = () => {
-        localStorage.setItem('coordData', JSON.stringify(coordData));
-        const url = window.location.origin + '/outputs';
-        window.open(url, '_blank');
     };
 
     const handleCoordinateChange = (data) => {
@@ -99,23 +107,24 @@ const Inputs = () => {
         setUavData(data);
     };
 
-    const handleTimeChange = (newTime) => {
-        setTimeData(newTime); 
+    const handledurationChange = (newduration) => {
+        setDurationData(newduration); 
     };
 
     const integrateData = () => {
-        const integratedData = {
+        return {
             coordData,
             minCoverage,
             uavData,
-            timeData
+            durationData
         };
-        return integratedData;
     };
 
-    const handleSubmit = async () => {
+    console.log(integrateData())
+    const handleRunModel = async () => {
         const jsonData = integrateData();
         console.log(jsonData);
+        let isError = false;
 
         try {
             // New API link here
@@ -124,7 +133,7 @@ const Inputs = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ jsonData }),
+                body: JSON.stringify({jsonData}),
             });
 
             if (!response.ok) {
@@ -134,55 +143,95 @@ const Inputs = () => {
             const responseData = await response.json();
             console.log(responseData);
 
-            setApiResponse(JSON.stringify(responseData, null, 2));
+            // setApiResponse(JSON.stringify(responseData, null, 2));
+
+
+            // Store coordData in local storage
+            localStorage.setItem('inputData', JSON.stringify(jsonData));
+
+            // Store the response in local storage
+            localStorage.setItem('outputData', JSON.stringify(responseData));
         } catch (error) {
             console.error('Error calling API:', error);
-            setApiResponse("Error calling API: " + error.message);
+            // setApiResponse("Error calling API: " + error.message);
+            setError("Error calling API: " + error.message);
+            setShowError(true);
+            isError = true;
+        }
+
+        if (!isError) {
+            const url = window.location.origin + '/outputs';
+            window.open(url, '_blank');
         }
     };
+
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const storedInputData = localStorage.getItem('inputData');
+            if (storedInputData) {
+                const parsedInputData = JSON.parse(storedInputData);
+                if (parsedInputData) {
+                    if (parsedInputData.coordData) setCoordData(parsedInputData.coordData);
+                    if (parsedInputData.minCoverage) setMinCoverage(parsedInputData.minCoverage);
+                    if (parsedInputData.uavData) setUavData(parsedInputData.uavData);
+                    if (parsedInputData.durationData) setDurationData(parsedInputData.durationData);
+                }
+            }
+        };
+    }, []);
 
     return (
         <div>
           <Box sx={{ display: 'flex' }}>
             <AppBar position="absolute" open={open}>
-              <Toolbar sx={{ pr: '24px', }}>
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    aria-label="open drawer"
-                    onClick={toggleDrawer}
-                    sx={{
-                      marginRight: '36px',
-                      ...(open && { display: 'none' }),
-                    }}
-                >
-                  <MenuIcon />
-                </IconButton>
+                <Toolbar sx={{pr: '24px',}}>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={toggleDrawer}
+                        sx={{
+                            marginRight: '36px',
+                            ...(open && {display: 'none'}),
+                        }}
+                    >
+                        <MenuIcon/>
+                    </IconButton>
 
-                <Typography
-                    component="h1"
-                    variant="h6"
-                    color="inherit"
-                    noWrap
-                    sx={{ flexGrow: 1 }}
-                >
-                  Inputs
-                </Typography>
-                  <Tooltip title={showMap ? 'Hide Map' : 'Show Map'}>
-                      <IconButton color="gray" onClick={toggleMap} sx={{ transform: 'scale(1.2)', mr: '5px' }}>
-                          <MapIcon />
-                      </IconButton>
-                  </Tooltip>
+                    <Typography
+                        component="h1"
+                        variant="h6"
+                        color="inherit"
+                        noWrap
+                        sx={{flexGrow: 1}}
+                    >
+                        Inputs
+                    </Typography>
+                    <Tooltip title={showMap ? 'Hide Map' : 'Show Map'}>
+                        <IconButton color="gray" onClick={toggleMap} sx={{transform: 'scale(1.2)', mr: '5px'}}>
+                            <MapIcon/>
+                        </IconButton>
+                    </Tooltip>
 
 
-                  <Button variant="contained" color="success" onClick={handleRunModel}>Run Model</Button>
-              </Toolbar>
+                    <Button variant="contained" color="success" onClick={handleRunModel}>Run Model</Button>
+
+                </Toolbar>
                 {
                     showMap &&
                     (
-                        <Box sx={{ position: 'absolute', right: '60%', top: '5rem', width: '20vw'}}>
+                        <Grid item xs={12} sm={8} md={8.5}>
                             <ShowMap coordData={coordData} />
-                        </Box>
+                        </Grid>
+                    )
+                }
+
+                {
+                    showError &&
+                    (
+                        <Alert variant="filled" severity="error" sx={{ position: 'fixed', bottom: 16, right: 16 }}>
+                            {error}
+                        </Alert>
                     )
                 }
             </AppBar>
@@ -202,9 +251,9 @@ const Inputs = () => {
               </Toolbar>
               <Divider />
               <List component="nav">
-                {mainListItems }
-                <Divider sx={{ my: 1 }} />
-                {secondaryListItems  }
+                {inputListItems}
+                <Divider sx={{ my: 10 }} />
+                {outputListItems}
               </List>
             </Drawer>
 
@@ -233,24 +282,14 @@ const Inputs = () => {
                               >
                                   <Card>
                                       <CardContent>
-                                          {/* CoordinateSystem */}
-                                          <CoordinateSystem
+                                          {/* CoordinateAndParameters */}
+                                          <CoordinateAndParameters
                                               onCoordinateChange={handleCoordinateChange}
                                               onCoverageChange={handleCoverageChange}
-                                              onTimeChange={handleTimeChange}
+                                              ondurationChange={handledurationChange}
                                           />
                                           {/* Unmanned Systems */}
                                           <UnmannedSystems onUnmannedSystemsChange={handleUnmannedSystemsChange} />
-                                      </CardContent>
-                                  </Card>
-
-                                  <Button variant="contained" onClick={handleSubmit}>UPLOAD DATA</Button>
-
-                                  {/* API Response Display */}
-                                  <Card>
-                                      <CardContent>
-                                          <InputLabel>API Response:</InputLabel>
-                                          <pre>{apiResponse}</pre>
                                       </CardContent>
                                   </Card>
                               </Box>
@@ -262,7 +301,7 @@ const Inputs = () => {
                           uavData={uavData}
                           minCoverage={minCoverage}
                           coordData={coordData}
-                          timeData={timeData}
+                          durationData={durationData}
                       />
                   </Container>
 

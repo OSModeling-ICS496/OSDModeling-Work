@@ -22,47 +22,50 @@ const ShowMap = ({ coordData }) => {
   const mapKey = Object.keys(coordData).length;
 
   return (
-      <MapContainer center={mapCenter} zoom={12} style={{ height: '80vh', width: '70vw' }} key={mapKey}>
-        <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        {baseLocation && (
-            <Marker position={[baseLocation.lat, baseLocation.long]}>
-              <Popup>Base Location <br/>
-                Lat: {baseLocation.lat}, long: {baseLocation.long}
-              </Popup>
-            </Marker>
-        )}
-        {reconLocation && (
-            <>
-              <Marker position={[reconLocation.lat, reconLocation.long]}>
-                <Popup>Recon Location <br/>
-                  Lat: {reconLocation.lat}, long: {reconLocation.long} <br/>
-                  Size: {coordData.size} km² <br/>
-                  Radius: {(coordData.size / 3.141592653589793) ** 0.5} km
-                </Popup>
-                <Circle
-                    center={[reconLocation.lat, reconLocation.long]}
-                    radius={(coordData.size * 1_000_000 / 3.141592653589793) ** 0.5}
-                    color="blue"
-                    fillColor="blue"
-                    fillOpacity={0.5}
-                />
-              </Marker>
 
+      <div style={{height: '80vh', width: '100%'}}> {/* Parent container controlling size */}
+          <MapContainer center={mapCenter} zoom={12} style={{height: '100%', width: '100%'}} key={mapKey}>
+              <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              />
               {baseLocation && (
-                  <Polyline
-                      positions={[
-                        [baseLocation.lat, baseLocation.long],
-                        [reconLocation.lat, reconLocation.long],
-                      ]}
-                      color="red"
-                  />
+                  <Marker position={[baseLocation.lat, baseLocation.long]}>
+                      <Popup>Base Location <br/>
+                          Lat: {baseLocation.lat}, long: {baseLocation.long}
+                      </Popup>
+                  </Marker>
               )}
-            </>
-        )}
-      </MapContainer>
+              {reconLocation && (
+                  <>
+                      <Marker position={[reconLocation.lat, reconLocation.long]}>
+                          <Popup>Recon Location <br/>
+                              Lat: {reconLocation.lat}, long: {reconLocation.long} <br/>
+                              Size: {coordData.size} km² <br/>
+                              Radius: {(coordData.size / 3.141592653589793) ** 0.5} km
+                          </Popup>
+                          <Circle
+                              center={[reconLocation.lat, reconLocation.long]}
+                              radius={(coordData.size * 1_000_000 / 3.141592653589793) ** 0.5}
+                              color="blue"
+                              fillColor="blue"
+                              fillOpacity={0.5}
+                          />
+                      </Marker>
+
+                      {baseLocation && (
+                          <Polyline
+                              positions={[
+                                  [baseLocation.lat, baseLocation.long],
+                                  [reconLocation.lat, reconLocation.long],
+                              ]}
+                              color="red"
+                          />
+                      )}
+                  </>
+              )}
+          </MapContainer>
+      </div>
   );
 };
 

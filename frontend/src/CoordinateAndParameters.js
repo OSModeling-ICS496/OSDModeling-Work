@@ -1,20 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import {
-  OutlinedInput,Box,Container,InputLabel,InputAdornment,Grid,FormControl,
+  OutlinedInput, Box, Container, InputLabel, InputAdornment, Grid, FormControl, FormHelperText,
 } from "@mui/material";
 
-const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange }) => {
+const CoordinateAndParameters = ({ onCoordinateChange, onCoverageChange,ondurationChange }) => {
   const [baseCoord, setBaseCoord] = useState({ lat: '', long: '' });
   const [reconCoord, setReconCoord] = useState({ lat: '', long: '' });
   const [size, setSize] = useState('');
-  const [time, setTime] = useState('');
+  const [duration, setDuration] = useState('');
   const [coverage, setCoverage] = useState('');
 
   useEffect(() => {
     onCoordinateChange({ baseCoord, reconCoord, size});
     onCoverageChange(coverage);
-    onTimeChange(time);
-  }, [baseCoord, reconCoord, size, time, coverage, onCoordinateChange, onCoverageChange, onTimeChange]);
+    ondurationChange(duration);
+  }, [baseCoord, reconCoord, size, duration, coverage, onCoordinateChange, onCoverageChange, ondurationChange]);
+
+  useEffect(() => {
+    const storedInputData = localStorage.getItem('inputData');
+    if (storedInputData) {
+      const parsedInputData = JSON.parse(storedInputData);
+      if (parsedInputData) {
+        if (parsedInputData.coordData){
+          setBaseCoord(parsedInputData.coordData.baseCoord);
+          setReconCoord(parsedInputData.coordData.reconCoord);
+        }
+        if (parsedInputData.minCoverage) setCoverage(parsedInputData.minCoverage);
+        if (parsedInputData.durationData) setDuration(parsedInputData.durationData);
+        if (parsedInputData.coordData.size) setSize(parsedInputData.coordData.size);
+      }
+    }
+  }, []);
 
   return (
     <Container>
@@ -87,10 +103,10 @@ const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange })
           <Grid item>
             <FormControl>
               <OutlinedInput
-                placeholder="Time"
+                placeholder="Duration"
                 required
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
                 endAdornment={<InputAdornment position="end">Hours</InputAdornment>}
               />
             </FormControl>
@@ -105,6 +121,7 @@ const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange })
                 required
                 endAdornment={<InputAdornment position="end">%</InputAdornment>}
               />
+              <FormHelperText>Minimum coverage for Recon Location</FormHelperText>
             </FormControl>
           </Grid>
         </Grid>
@@ -113,4 +130,4 @@ const CoordinateSystem = ({ onCoordinateChange, onCoverageChange,onTimeChange })
   );
 };
 
-export default CoordinateSystem;
+export default CoordinateAndParameters;
