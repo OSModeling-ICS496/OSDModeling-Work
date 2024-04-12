@@ -2,7 +2,6 @@ import * as React from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
 import SaveIcon from '@mui/icons-material/Save';
 import UploadIcon from '@mui/icons-material/Upload';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
@@ -17,11 +16,11 @@ const saveInput = () => {
         return;
     }
 
-    const previewData = JSON.stringify(inputData, null, 2).substring(0, 500);
-    const userConfirmed = window.confirm(`Do you want to save this input data?\nPreview:\n${previewData}${previewData.length >= 500 ? '...' : ''}`);
+    const previewData = JSON.stringify(inputData, null, 2);
+    const userConfirmed = window.confirm(`Do you want to save this input data?\nPreview:\n${previewData}`);
 
     if (userConfirmed) {
-        const blob = new Blob([JSON.stringify(inputData, null, 2)], { type: 'application/json' });
+        const blob = new Blob([previewData], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
@@ -48,8 +47,8 @@ const saveOutput = () => {
     };
 
     // Create a preview for the confirmation dialog
-    const previewData = JSON.stringify(combinedData, null, 2).substring(0, 500);
-    const userConfirmed = window.confirm(`Do you want to save this data?\nPreview:\n${previewData}${previewData.length >= 500 ? '...' : ''}`);
+    const previewData = JSON.stringify(combinedData, null, 2);
+    const userConfirmed = window.confirm(`Do you want to save this data?\nPreview:\n${previewData}`);
 
     if (userConfirmed) {
         const blob = new Blob([JSON.stringify(combinedData, null, 2)], { type: 'application/json' });
@@ -77,7 +76,7 @@ const loadInput = () => {
             try {
                 const data = JSON.parse(e.target.result);
                 // Validate data structure
-                if (data && data.coordData && data.minCoverage && Array.isArray(data.uavData) && data.timeData) {
+                if (data && data.coordData && data.minCoverage && Array.isArray(data.uavData) && data.durationData) {
                     localStorage.setItem('inputData', JSON.stringify(data));
                     alert("Input data loaded successfully.");
                     window.location.reload();

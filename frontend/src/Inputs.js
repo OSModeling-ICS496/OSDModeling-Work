@@ -120,7 +120,6 @@ const Inputs = () => {
         };
     };
 
-    console.log(integrateData())
     const handleRunModel = async () => {
         const jsonData = integrateData();
         console.log(jsonData);
@@ -166,18 +165,16 @@ const Inputs = () => {
     };
 
     useEffect(() => {
-        const handleStorageChange = () => {
-            const storedInputData = localStorage.getItem('inputData');
-            if (storedInputData) {
-                const parsedInputData = JSON.parse(storedInputData);
-                if (parsedInputData) {
-                    if (parsedInputData.coordData) setCoordData(parsedInputData.coordData);
-                    if (parsedInputData.minCoverage) setMinCoverage(parsedInputData.minCoverage);
-                    if (parsedInputData.uavData) setUavData(parsedInputData.uavData);
-                    if (parsedInputData.durationData) setDurationData(parsedInputData.durationData);
-                }
+        const storedInputData = localStorage.getItem('inputData');
+        if (storedInputData) {
+            const parsedInputData = JSON.parse(storedInputData);
+            if (parsedInputData) {
+                if (parsedInputData.coordData) setCoordData(parsedInputData.coordData);
+                if (parsedInputData.minCoverage) setMinCoverage(parsedInputData.minCoverage);
+                if (parsedInputData.uavData) setUavData(parsedInputData.uavData);
+                if (parsedInputData.durationData) setDurationData(parsedInputData.durationData);
             }
-        };
+        }
     }, []);
 
     return (
