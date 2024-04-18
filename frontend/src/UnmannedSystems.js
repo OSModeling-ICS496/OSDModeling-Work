@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import { Container, Box, MenuItem, FormControl, Select, Grid, FormHelperText, InputLabel, List, ListItem, ListItemText, IconButton, TextField, Button, Input, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Tooltip, Container, Box, MenuItem, FormControl, Select, Grid, FormHelperText, InputLabel, List, ListItem, ListItemText, IconButton, TextField, Button, Input, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import HelpIcon from '@mui/icons-material/Help';
 
 const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
   const [options, setOptions] = useState([]);
@@ -236,6 +237,9 @@ const UnmannedSystems = ({ onUnmannedSystemsChange }) => {
             <InputLabel>Upload CSV:</InputLabel>
             <Input id="csvFileInput" type="file" accept=".csv" style={{ display: 'none' }} onChange={handleFileUpload} />
             <Button variant="contained" onClick={handleAddCSVData}>Add CSV Data</Button>
+            <Tooltip title={"Your CSV should have columns: Name, Coverage, Endurance, Speed"}>
+              <HelpIcon style={{ cursor: 'pointer', marginLeft: 10 }} />
+            </Tooltip>
           </Grid>
         </Grid>
 
